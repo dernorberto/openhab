@@ -1,10 +1,13 @@
 ##openhab2 config
-### items
-```Switch PresencePhone1
-Switch PresencePhone2
-Switch PresencePhone3```
+### presence.items
 
-### sitemap
+```
+Switch PresencePhone1
+Switch PresencePhone2
+Switch PresencePhone3
+```
+
+### presence.sitemap
 
 ```
 sitemap Presence label="Home sweet home" {
@@ -35,7 +38,8 @@ Notes:
 * to find out correct curl command, use REST API, search for items and update the state of an item
 * the wifi detection command depends on the Asus Router model, in this case it's an RT-N66U wunning AsusWRT
 
-```#!/bin/sh
+```
+#!/bin/sh
 
 Phone1=Away
 Phone2=Away
@@ -114,4 +118,5 @@ if [ "$Phone3" = Home ]
   rm -f /jffs/scripts/CheckUser/Phone3Home
   curl -X PUT --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://192.168.188.10:8080/rest/items/PresencePhone3/state"
  fi
-fi ```
+fi
+```
