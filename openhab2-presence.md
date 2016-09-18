@@ -13,7 +13,8 @@ Frame label="Who's home?" {
                 Switch item=PresencePhone2 visibility=[PresencePhone2==ON]
                 Switch item=PresencePhone3 visibility=[PresencePhone3==ON]
         }
-}```
+}
+```
 
 ## AsusWRT
 ### cronjob
