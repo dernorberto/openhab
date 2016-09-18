@@ -5,7 +5,9 @@ Switch PresencePhone2
 Switch PresencePhone3```
 
 ### sitemap
-```sitemap Presence label="Home sweet home" {
+
+```
+sitemap Presence label="Home sweet home" {
 Frame label="Who's home?" {
                 Switch item=PresencePhone1 visibility=[PresencePhone1==ON]
                 Switch item=PresencePhone2 visibility=[PresencePhone2==ON]
