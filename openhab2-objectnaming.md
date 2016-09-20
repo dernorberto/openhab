@@ -2,8 +2,8 @@
 
 ### template
 
-* <objectType>.<ROom>.<designation>
-* <objectType>.<ROom>[-<specifics>].<designation>
+* '<objectType>.<ROom>.<designation>'
+* '<objectType>.<ROom>[-<specifics>].<designation>'
 
 ## Explanation
 
