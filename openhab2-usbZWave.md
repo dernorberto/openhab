@@ -43,9 +43,11 @@ the USB device is now accessible as `/dev/USBzwave`
 If not told to, openhab will not be able to connect to new /dev/USBzwave device and limit itself to the ttyASMx devices.
 As it's the apt repository installation, we need to customize the EXTRA_JVA_OPTS options.
 > vi /etc/default/openhab  
+
 * add `-Dgnu.io.rxtx.SerialPorts=/dev/USBzwave` to `EXTRA_JAVA_OPTS=""`  
 * result = `EXTRA_JAVA_OPTS="-Dgnu.io.rxtx.SerialPorts=/dev/USBzwave"`  
 * note: The individual serial controller separated by ":" will be the only ones openhab2 will be able to use, so if you add only /dev/USBzwave, then openhab will not be able to use /dev/ttyACM0
+
 > sudo service openhab2 restart
 
 ### tell openhab where to connect to the USB serial controller
