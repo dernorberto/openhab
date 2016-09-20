@@ -20,11 +20,11 @@
 * Thermo.EL.Battery
 * Sensor.HA.Battery
 * Sensor.HA.Brightness
-* Sensor.HA.State
+* Sensor.HA.State (open or closed)
 * Sensor.HA.CurrentTemp
 * Network.Norberto6S.Presence
 * Network.Norberto5.Presence
-* Network.PS3.Presence
+* PS3.LI.Presence
 * Sonos.LO.Play
 * Sonos.LO.volume
 * Sonos.LO.xxx
