@@ -12,11 +12,11 @@ https://www.eclipse.org/smarthome/documentation/community/downloads.html
 
 ## Samba file share for designer
 souce: http://docs.openhab.org/installation/linux.html#network-sharing
-> sudo apt-get install samba samba-common-bin
-> sudo vim /etc/samba/smb.conf
-> sudo smbpasswd -a openhab
-> sudo chown -hR openhab:openhab /etc/openhab2
-> sudo service smbd restart
+> sudo apt-get install samba samba-common-bin  
+> sudo vim /etc/samba/smb.conf  
+> sudo smbpasswd -a openhab  
+> sudo chown -hR openhab:openhab /etc/openhab2  
+> sudo service smbd restart  
 
 ## checking logs
 > tail -f /var/log/openhab2/openhab.log -f /var/log/openhab2/events.log
