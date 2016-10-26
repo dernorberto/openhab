@@ -1,4 +1,4 @@
 ## Installation
 http://docs.openhab.org/installation/rasppi.html
-## Community
-https://community.openhab.org
+## Support options
+https://github.com/openhab/openhab/wiki/Support-options-for-openHAB
