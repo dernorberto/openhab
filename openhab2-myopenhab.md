@@ -1,7 +1,10 @@
-UUID  
-`/var/lib/openhab2/uuid`
+Two things are required in order to connect openhab2 to my.openhab.org
 
-secret  
-`/var/lib/openhab2/myopenhab/secret`
+### UUID  
+File path: `/var/lib/openhab2/uuid`
 
-latest JAVA update - see [update java to >version than available via raspbian apt repo](https://github.com/dernorberto/openhab/blob/master/openhab2-issuesnfixes.md)
+### secret  
+File path: `/var/lib/openhab2/myopenhab/secret`
+
+### Troubleshooting
+If my.openhab.org is not working, it could be related to an old JAVA version, see [RPi - update JAVA via apt repo](https://github.com/dernorberto/openhab/blob/master/openhab2-issuesnfixes.md)
