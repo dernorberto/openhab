@@ -1,3 +1,8 @@
+## The premise
+
+* WIFI Router repeatedly searches for specific MAC Addresses in his Wifi clients list
+* if it finds a valid one, the router updates the status of an openhab2 item via a REST call
+
 ##openhab2 config
 ### presence.items
 
