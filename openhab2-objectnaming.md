@@ -4,8 +4,8 @@ Can't use "." (dots) as separators in the name, switched to underscore instead
 
 ### template
 
-* `<objectType>_<ROom>_<designation>`
-* `<objectType>_<ROom>[-<specifics>]_<designation>`
+* `<PhysicalObjectType>_<ROom>_<designation>`
+* `<PhysicalObjectType>_<ROom>[-<specifics>]_<designation>`
 
 ## Explanation
 
