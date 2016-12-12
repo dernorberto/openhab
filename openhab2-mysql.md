@@ -1,4 +1,4 @@
-# openhab2 mysql
+# openhab2 mysql Persistence
 
 ## install software on RPi
 
