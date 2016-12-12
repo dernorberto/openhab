@@ -1,8 +1,23 @@
 # openhab2 mysql Persistence
 
+## notes
+
+* restart openhab2 once all the mysql settings, config & persistence files, databases and user auth are setup
+* openhab2 should create all the required tables inside the database if all is setup properly
+* if you're not able to add the persistence extensions in Paper UI and the error is `Unable to resolve root: missing requirement [root]`, then:
+  * stop openhab2  
+  * clear the contents of the folder `/var/lib/openhab2/cache/`
+  * start openhab2
+  * install extension again (keep an eye on the logs to confirm proper installation)
+```
+==> /var/log/openhab2/events.log <==
+2016-12-12 20:39:25.176 [ExtensionEvent            ] - Extension 'persistence-mysql' has been installed.
+```
+
 ## install software on RPi
 
 * mysql-server
+  * as usual, the mysql root password is defined when completing the installation
 
 ## setting up the mysql DB
 
@@ -12,23 +27,25 @@
 > GRANT ALL PRIVILEGES ON openhab2.* TO openhab@localhost;  
 > flush privileges;  
 
-## added extensions via Paper UI
+## add extensions via Paper UI
 
 * JDBC Persistence MySQL
 * MySQL Persistence
 
-## mysql usernames:passwords
+## documenting mysql usernames:passwords
 
 * root:root
 * openhab:openhab
 
-## databases
+## documenting mysql databases
 
 * openhab2
 
 ## Service Configuration Files
 
 ### /etc/openhab2/services/mysql.cfg && jdbc.cfg
+
+* Note: these files are created automatically after installing the extensions
 
 ```
 url=jdbc:mysql://127.0.0.1:3306/openhab2
@@ -40,6 +57,8 @@ password=openhab
 
 ## Persistence
 ### /etc/openhab2/persistence/mysql.persist
+
+* Note: this file has to be created manually
 
 ```
 Strategies {
@@ -54,9 +73,10 @@ gSwitch* : strategy = everyMinute, restoreOnStartup
 ```
 
 ## Questions
-* did openhab create the appropriate tables?
+* did openhab create the appropriate tables and are they getting populated?
+
 > mysql> use openhab2  
-> mysql> _show tables;  
+> mysql> show tables;  
 
 ```
 +--------------------+
