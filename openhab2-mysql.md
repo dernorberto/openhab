@@ -109,7 +109,38 @@ gSwitch* : strategy = everyMinute, restoreOnStartup
 23 rows in set (0.00 sec)
 ```
 
-> mysql> select * from Item1;  
+> mysql> select * from Items;
+
+```
++--------+-------------------------+
+| ItemId | ItemName                |
++--------+-------------------------+
+|      1 | Thermo_LI_CurrentTemp   |
+|      2 | Thermo_BE_CurrentTemp   |
+|      3 | Sensor_LO_Temperature   |
+|      4 | Thermo_OF_CurrentTemp   |
+|      5 | Sensor_HA_Temperature   |
+|      6 | Thermo_EL_CurrentTemp   |
+|      7 | Thermo_LO_M_CurrentTemp |
+|      8 | Sensor_HA_State         |
+|      9 | Sensor_HA_Luminance     |
+|     10 | Sensor_LO_Humidity      |
+|     11 | Sensor_LO_Luminance     |
+|     12 | Sensor_LO_Motion        |
+|     13 | Switch_KI_switch        |
+|     14 | Switch_2_kwh            |
+|     15 | Switch_1_watts          |
+|     16 | Switch_2_switch         |
+|     17 | Switch_2_watts          |
+|     18 | Switch_KI_switch1       |
+|     19 | Switch_1_kwh            |
+|     20 | Switch_1_switch         |
+|     21 | Switch_KI_switch2       |
++--------+-------------------------+
+21 rows in set (0.00 sec)
+```
+
+> mysql> select * from Item1;  
 
 ```
 +---------------------+-------+
