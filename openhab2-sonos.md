@@ -11,7 +11,7 @@ What matters to me is:
 * my select method to call an existing playlist/album/radio is to have it as a Sonos Favorite and play that  
   * each Sonos Favorite can be renamed in case it contains special characters  
 * I am not using REPEAT properly, it only works for the current track or queue and I am using a Playlist  
-  
+
 ## Requirements:  
 * Sonos binding - http://docs.openhab.org/addons/bindings/sonos/readme.html
 * Sonos devices discovered and added as things  
