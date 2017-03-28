@@ -76,8 +76,8 @@ gSwitch* : strategy = everyMinute, restoreOnStartup
 
 ref: http://docs.openhab.org/configuration/sitemaps.html#element-type-chart
 
-* in case there is more than one persistence defined, the one storing charts has to be defined in the sitemap
-  * _service sets the persistence service to use. If no service is set, openHAB will use the first queryable persistence service it finds. Therefore, for an installation with only a single persistence service, this is not required._  
+* in case there is more than one persistence defined, the one storing charts has to be defined in the sitemap  
+* _service sets the persistence service to use. If no service is set, openHAB will use the first queryable persistence service it finds. Therefore, for an installation with only a single persistence service, this is not required._  
 
 ```
 Chart item=Switch_1_watts service="jdbc" period=W refresh=3600
