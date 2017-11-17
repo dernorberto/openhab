@@ -39,26 +39,27 @@ after plugging in device, check out `/var/log/syslog` or run
 
 > sudo vi  /etc/udev/rules.d/99-usbserial.rules
 
-`SUBSYSTEM=="tty", ATTRS{idVendor}=="0658", ATTRS{idProduct}=="0200", SYMLINK+="USBzwave", GROUP="dialout", MODE="0666"`
+`SUBSYSTEM=="tty", ATTRS{idVendor}=="0658", ATTRS{idProduct}=="0200", SYMLINK+="ttyUSB0", GROUP="dialout", MODE="0666"`
 
 > sudo udevadm trigger  
 
 ... or restart RPi
 
-the USB device is now accessible as `/dev/USBzwave`
+> ls /dev
+```
+crw-rw-rw-  1 root dialout 166,   1 Nov 17 21:18 ttyACM1
+crw-rw----  1 root dialout 204,  64 Nov 17 21:10 ttyAMA0
+crw-------  1 root root      5,   3 Nov 17 21:10 ttyprintk
+lrwxrwxrwx  1 root root           7 Nov 17 21:12 ttyUSB0 -> ttyACM1
+```
 
-### allow openhab to use that device as well
+the USB device is now accessible as `/dev/ttyUSB0`
 
-If not told so, openhab2 will not be able to connect to new `/dev/USBzwave` device and limit itself to the ttyACMx-named devices.
-As it's the apt repository installation, we need to customize the `EXTRA_JAVA_OPTS` options.
-
-> vi /etc/default/openhab  
-
-* add `-Dgnu.io.rxtx.SerialPorts=/dev/USBzwave` to `EXTRA_JAVA_OPTS=""`  
-* result = `EXTRA_JAVA_OPTS="-Dgnu.io.rxtx.SerialPorts=/dev/USBzwave"`  
-* note: The individual serial controller separated by ":" will be the only ones openhab2 will be able to use, so if you add only `/dev/USBzwave`, openhab will not be able to use `/dev/ttyACM0`
+openhab2 MUST BE RESTARTED between removing and reinserting the USB zwave stick
 
 > sudo service openhab2 restart
+
+Note: I initially tried to use aliases like zwave or usbzwave, which did not work. as ttyUSB0 was free, I picked that and it worked.
 
 ### define in openhab2 where to connect to the USB serial controller
 
@@ -68,4 +69,4 @@ As it's the apt repository installation, we need to customize the `EXTRA_JAVA_OP
     * in this case, my *USB Serial Controller* (Aeon Labs Z-Stick Gen5)
     * Port Configuration
     * Serial Port
-    * `/dev/USBzwave' then Save and keep an eye on the logs
+    * `/dev/ttyUSB0' then Save and keep an eye on the logs
