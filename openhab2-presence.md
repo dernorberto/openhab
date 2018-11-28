@@ -1,31 +1,39 @@
 ## The premise
 
 * WIFI Router repeatedly searches for specific MAC Addresses in his Wifi clients list
-* if it finds a valid one, the router updates the status of an openhab2 item via a REST call
+* if it finds a valid one, the router updates the status of an openhab2 item via a REST API PUT request
 
-##openhab2 config
+## openhab2 config
+
 ### presence.items
 
 ```
-Switch PresencePhone1
-Switch PresencePhone2
-Switch PresencePhone3
+Group gPresence (All)
+
+Switch MobileDevice1 "Mobile Device 1 Name" <switch>        (gPresence) 
+Switch MobileDevice2 "Mobile Device 2 Name" <switch>        (gPresence) 
 ```
 
 ### presence.sitemap
 
 ```
-sitemap Presence label="Home sweet home" {
-Frame label="Who's home?" {
-                Switch item=PresencePhone1 visibility=[PresencePhone1==ON]
-                Switch item=PresencePhone2 visibility=[PresencePhone2==ON]
-                Switch item=PresencePhone3 visibility=[PresencePhone3==ON]
+sitemap presence label="presence" {
+        Frame label="Mobile Devices" {
+                Switch item=MobileDevice1
+                Switch item=MobileDevice2
         }
 }
+
 ```
 
 ## AsusWRT
+
+Note: more information about JFFS: https://github.com/RMerl/asuswrt-merlin/wiki/JFFS
+
 ### cronjob
+
+* example of running every 10 seconds, which is a bit much
+* for 1x/minute, use only the first line
 
 > crontab -e
 ```
@@ -40,15 +48,16 @@ Frame label="Who's home?" {
 ### script: /jffs/scripts/CheckUser/checkIfHome.sh
 
 Notes:
+* This version of the script makes a request to openhab every time it checks each device, and another request if it changes the presence value
 * to find out correct curl command, use REST API, search for items and update the state of an item
-* the wifi detection command depends on the Asus Router model, in this case it's an RT-N66U wunning AsusWRT
+* the wifi detection command depends on the Asus Router model, in this case it's an RT-N66U running AsusWRT
+* the logic is simple:
+  * if MAC address is found, then set Switch Item to ON, only if not already ON
+  * if MAC Address is NOT fount, then set Switch Item to OFF, only it not already OFF
+* it takes a relative minute to detect that a device is not associated with the Wifi router anymore, but seconds to detect it come on
 
 ```
 #!/bin/sh
-
-Phone1=Away
-Phone2=Away
-Phone3=Away
 
 macadresser="`wl -i eth1 assoclist` `wl -i eth2 assoclist`"
 # set to 0 to use only wl for wifi detection
@@ -62,66 +71,59 @@ macadresser="`wl -i eth1 assoclist` `wl -i eth2 assoclist`"
 #done
 
 case "$macadresser" in
- *xx:xx:x:xx:xx:xx*)
+ *AA:AA:AA:AA:AA:AA*)
  Phone1=Home
  ;;
+ *)
+ Phone1=Away
 esac
 
 case "$macadresser" in
- *yy:yy:yy:yy:yy:yy*)
+ *BB:BB:BB:BB:BB:BB*)
  Phone2=Home
  ;;
+ *)
+ Phone2=Away
 esac
-
-case "$macadresser" in
- *zz:zz:zz:zz:zz:zz*)
- Phone3=Home
- ;;
-esac
-
 
 if [ "$Phone1" = Home ]
 then
- if [ ! -f /jffs/scripts/CheckUser/Phone1Home ]
- then
-  touch /jffs/scripts/CheckUser/Phone1Home
-  curl -X PUT --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://192.168.188.10:8080/rest/items/PresencePhone1/state"
- fi
- else
- if [ -f /jffs/scripts/CheckUser/Phone1Home ]
- then
-  rm -f /jffs/scripts/CheckUser/Phone1Home
-  curl -X PUT --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://192.168.188.10:8080/rest/items/PresencePhone1/state"
- fi
+  query="$(curl -X GET "http://<openhab2 IP>:8080/rest/items/MobileDevice1/state")"
+  if [ $query != "ON" ]
+  then
+    # set value to ON
+    curl -X PUT --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://<openhab2 IP>:8080/rest/items/MobileDevice1/state"
+  fi
 fi
-               
+
+if [ "$Phone1" = Away ]
+then
+  query="$(curl -X GET "http://<openhab2 IP>:8080/rest/items/MobileDevice1/state")"
+  if [ $query != "OFF" ]
+  then
+    # set value to OFF
+    curl -X PUT --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://<openhab2 IP>:8080/rest/items/MobileDevice1/state"
+  fi
+fi
+
 if [ "$Phone2" = Home ]
- then
- if [ ! -f /jffs/scripts/CheckUser/Phone2Home ]
- then
-  touch /jffs/scripts/CheckUser/Phone2Home
-  curl -X PUT --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://192.168.188.10:8080/rest/items/PresencePhone2/state"
- fi
- else
- if [ -f /jffs/scripts/CheckUser/Phone2Home ]
- then
-  rm -f /jffs/scripts/CheckUser/Phone2Home
-  curl -X PUT --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://192.168.188.10:8080/rest/items/PresencePhone2/state"
- fi
+then
+  query="$(curl -X GET "http://<openhab2 IP>:8080/rest/items/MobileDevice2/state")"
+  if [ $query != "ON" ]
+  then
+    # set value to ON
+    curl -X PUT --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://<openhab2 IP>:8080/rest/items/MobileDevice2/state"
+  fi
 fi
-                             
-if [ "$Phone3" = Home ]
- then
- if [ ! -f /jffs/scripts/CheckUser/Phone3Home ]
- then
-  touch /jffs/scripts/CheckUser/Phone3Home
-  curl -X PUT --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://192.168.188.10:8080/rest/items/PresencePhone3/state"
- fi
- else
- if [ -f /jffs/scripts/CheckUser/Phone3Home ]
- then
-  rm -f /jffs/scripts/CheckUser/Phone3Home
-  curl -X PUT --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://192.168.188.10:8080/rest/items/PresencePhone3/state"
- fi
+
+if [ "$Phone2" = Away ]
+then
+  query="$(curl -X GET "http://<openhab2 IP>:8080/rest/items/MobileDevice2/state")"
+  if [ $query != "OFF" ]
+  then
+    # set value to OFF
+    curl -X PUT --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://<openhab2 IP>:8080/rest/items/MobileDevice2/state"
+  fi
 fi
+
 ```
