@@ -1,6 +1,6 @@
 ## The premise
 
-* WIFI Router repeatedly searches for specific MAC Addresses in his Wifi clients list
+* WIFI Router regularly searches for specific MAC Addresses in his Wifi clients list
 * if it finds a valid one, the router updates the status of an openhab2 item via a REST API PUT request
 
 ## openhab2 config
@@ -30,22 +30,38 @@ sitemap presence label="presence" {
 
 Note: more information about JFFS: https://github.com/RMerl/asuswrt-merlin/wiki/JFFS
 
-### cronjob
+### crontab file to import
 
-* example of running every 10 seconds, which is a bit much
-* for 1x/minute, use only the first line
+* /jffs/configs/**cron**
+
+`*/15 * * * * /jffs/scripts/CheckUser/checkIfHome.sh >/dev/null 2>&1`
+
+Note: example runs every 15 minutes
+
+### script to import crontab on every boot
+
+* /jffs/scripts/**services-start**
+
+```
+#!/bin/sh
+sleep 10
+/usr/bin/crontab /jffs/configs/cron
+```
+
+### show crontab
+
+> cru l
+
+or
+
+> crontab -l
+
+### edit crontab
 
 > crontab -e
-```
-* * * * * /jffs/scripts/CheckUser/checkIfHome.sh
-* * * * * sleep 10; /jffs/scripts/CheckUser/checkIfHome.sh
-* * * * * sleep 20; /jffs/scripts/CheckUser/checkIfHome.sh
-* * * * * sleep 30; /jffs/scripts/CheckUser/checkIfHome.sh
-* * * * * sleep 40; /jffs/scripts/CheckUser/checkIfHome.sh
-* * * * * sleep 50; /jffs/scripts/CheckUser/checkIfHome.sh
-```
 
-### script: /jffs/scripts/CheckUser/checkIfHome.sh
+
+### script for Presence detection
 
 Notes:
 * This version of the script makes a request to openhab every time it checks each device, and another request if it changes the presence value
@@ -53,8 +69,12 @@ Notes:
 * the wifi detection command depends on the Asus Router model, in this case it's an RT-N66U running AsusWRT
 * the logic is simple:
   * if MAC address is found, then set Switch Item to ON, only if not already ON
-  * if MAC Address is NOT fount, then set Switch Item to OFF, only it not already OFF
+  * if MAC Address is NOT found, then set Switch Item to OFF, only it not already OFF
 * it takes a relative minute to detect that a device is not associated with the Wifi router anymore, but seconds to detect it come on
+
+### The script itself
+
+* /jffs/scripts/CheckUser/**checkIfHome.sh**
 
 ```
 #!/bin/sh
