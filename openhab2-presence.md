@@ -147,3 +147,37 @@ then
 fi
 
 ```
+
+## Trigger script from an event
+
+* every time the door is closed, run the script
+
+### router
+
+* allow openhab2 host to ssh by adding pubkey to device
+
+### openhab
+
+#### commands.things
+
+```
+Thing exec:command:checkPresence [command="ssh admin@<router_IP> /jffs/scripts/CheckUser/checkIfHome.sh"]
+```
+
+#### command.items
+
+```
+Switch checkPresence {channel="exec:command:checkPresence:run"}
+```
+
+#### presence.rules
+
+```
+rule "check Presence with front door"
+when
+        Item Sensor_HA_Door changed to CLOSED
+then
+        checkPresence.sendCommand(ON)
+end
+```
+
